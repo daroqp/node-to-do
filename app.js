@@ -5,12 +5,19 @@ const { inquirerMenu,
 		leerInput
 } = require('./helpers/inquirer');
 
+const { guardarDB, leerDB } = require('./helpers/guardarArchivo')
 const Tareas = require('./models/tareas');
 
 const main = async() => {
 
 	let opt = '';
 	const tareas = new Tareas();
+	
+	const tareaDB = leerDB();
+
+	if(tareaDB){
+		tareas.cargarTareasFromArray(tareaDB);
+	}
 
 	do {
 		
@@ -19,7 +26,7 @@ const main = async() => {
 		switch( opt ) {
 			case '1': 
 				const desc = await leerInput('Descripcion:');
-				tareas.crearTareas( desc );
+				tareas.crearTarea( desc );
 
 				break;
 			case '2': 
@@ -43,6 +50,7 @@ const main = async() => {
 				break;
 		}
 
+		guardarDB( tareas.listadoArr );
 
 		await pausa();
 
@@ -53,4 +61,4 @@ const main = async() => {
 
 
 
-main()
+main();
